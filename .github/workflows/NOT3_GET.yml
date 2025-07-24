@@ -1,0 +1,102 @@
+name: NOT3_GET
+
+on:
+  schedule:
+      - cron:  '35 */6 * * *'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2025
+    steps:
+      - name: 🛎 Check out main
+        uses: actions/checkout@master
+        with:
+          repository: ${{ secrets.REPO_ORG }}/${{ secrets.REPO_NAME }}
+          token: ${{ secrets.REPO_TOKEN }}
+          fetch-depth: 1
+      - name: make dir set bin
+        run: |
+          mkdir NOT3_REPO
+          7z  x -p${{ secrets.ZIP_PASS }} bin.7z.001
+          ren _NOT3_DEPLOY_TEMP NOT3_MAIN
+      - name: debug dir
+        run: |
+          cd NOT3_MAIN
+          ls
+      - name: NPC
+        run: |
+          cd NOT3_MAIN
+          java -Xms128m -Xmx4g -jar NOT3_001_Main.jar NewPageChecker
+      - name: PG
+        run: |
+          cd NOT3_MAIN
+          java -Xms128m -Xmx4g -jar NOT3_001_Main.jar PageGetter
+      - name: WC
+        run: |
+          cd NOT3_MAIN
+          java -Xms128m -Xmx4g -jar NOT3_001_Main.jar WorkChecker
+      - name: EZT_1
+        run: |
+          cd NOT3_MAIN
+          .\source\EzTransXpTranslator\EzTransXpTranslator1\EzTransXpTranslator1\bin\x86\Release\EzTransXpTranslator1.exe
+        continue-on-error: true
+      - name: GT_1
+        run: |
+          cd NOT3_MAIN
+          java -Xms128m -Xmx4g -jar NOT3_001_Main.jar GTrans
+        continue-on-error: true
+      - name: WC_1
+        run: |
+          cd NOT3_MAIN
+          java -Xms128m -Xmx4g -jar NOT3_001_Main.jar WorkChecker
+      - name: EZT_2
+        run: |
+          cd NOT3_MAIN
+          .\source\EzTransXpTranslator\EzTransXpTranslator1\EzTransXpTranslator1\bin\x86\Release\EzTransXpTranslator1.exe
+        continue-on-error: true
+      - name: GT_2
+        run: |
+          cd NOT3_MAIN
+          java -Xms128m -Xmx4g -jar NOT3_001_Main.jar GTrans
+        continue-on-error: true
+      - name: WC_2
+        run: |
+          cd NOT3_MAIN
+          java -Xms128m -Xmx4g -jar NOT3_001_Main.jar WorkChecker
+      - name: EZT_3
+        run: |
+          cd NOT3_MAIN
+          .\source\EzTransXpTranslator\EzTransXpTranslator1\EzTransXpTranslator1\bin\x86\Release\EzTransXpTranslator1.exe
+      - name: GT_3
+        run: |
+          cd NOT3_MAIN
+          java -Xms128m -Xmx4g -jar NOT3_001_Main.jar GTrans
+      - name: WC_3
+        run: |
+          cd NOT3_MAIN
+          java -Xms128m -Xmx4g -jar NOT3_001_Main.jar WorkChecker
+      - name: J2T
+        run: |
+          cd NOT3_MAIN
+          java -Xms128m -Xmx4g -jar NOT3_001_Main.jar Json2Txt
+      - name: WC_4
+        run: |
+          cd NOT3_MAIN
+          java -Xms128m -Xmx4g -jar NOT3_001_Main.jar WorkChecker
+      - name: CWD
+        run: |
+          cd NOT3_MAIN
+          java -Xms128m -Xmx4g -jar NOT3_001_Main.jar CheckWorkDone
+      - name: ZPM
+        run: |
+          cd NOT3_MAIN
+          java -Xms128m -Xmx4g -jar NOT3_001_Main.jar ZipPagesMake
+      - name: PGP
+        run: |
+          cd NOT3_MAIN
+          java -Xms128m -Xmx4g -jar NOT3_001_Main.jar PagesGitPull
+      - name: PGUAP
+        run: |
+          cd NOT3_MAIN
+          java -Xms128m -Xmx4g -jar NOT3_001_Main.jar PagesGitUpdateAndPush
